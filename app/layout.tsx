@@ -3,7 +3,9 @@ import { Geist, Geist_Mono, Merriweather, Space_Grotesk } from "next/font/google
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip"
-
+import { ThemeProvider } from "@/components/providers/theme-provider"
+import { QueryProvider } from "@/components/providers/query-provider";
+import { ClerkProvider}  from '@clerk/nextjs'
 const spaceGroteskHeading = Space_Grotesk({subsets:['latin'],variable:'--font-heading'});
 
 const merriweather = Merriweather({subsets:['latin'],variable:'--font-serif'});
@@ -31,6 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         "h-full",
         "antialiased",
@@ -42,9 +45,20 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
+         <ClerkProvider>
         <TooltipProvider>
+          <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
           {children}
+          </ThemeProvider>
+          </QueryProvider>
         </TooltipProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
